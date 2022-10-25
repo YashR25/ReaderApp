@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ReaderApp</string>
+    <string name="create_acct">Please enter valid email and password that is at least 8 characters</string>
+</resources>
