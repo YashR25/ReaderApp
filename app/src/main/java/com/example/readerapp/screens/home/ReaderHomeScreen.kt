@@ -1,29 +1,22 @@
 package com.example.readerapp.screens.home
 
-import android.graphics.Paint.Align
+import android.util.Log
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
 import com.example.readerapp.components.ListCard
 import com.example.readerapp.components.ReaderAppBar
 import com.example.readerapp.components.RoundedFloatingButton
@@ -34,7 +27,7 @@ import com.google.firebase.auth.FirebaseAuth
 
 //@Preview
 @Composable
-fun ReaderHomeScreen(navController: NavController = NavController(LocalContext.current)) {
+fun ReaderHomeScreen(navController: NavController = NavController(LocalContext.current),viewModel: HomeScreenViewModel) {
     Scaffold(topBar = {
                       ReaderAppBar(title = "Reader",navController = navController)
     }, floatingActionButton = {
@@ -42,24 +35,24 @@ fun ReaderHomeScreen(navController: NavController = NavController(LocalContext.c
             navController.navigate(ReaderScreens.SearchScreen.name)
         }
     }) {
-        HomeScreen(navController)
+        HomeScreen(navController,viewModel)
 
     }
 }
 
 @Composable
-fun HomeScreen(navController: NavController){
+fun HomeScreen(navController: NavController, viewModel: HomeScreenViewModel){
 
-    val listOfBooks = listOf(
-        MBook("","asassa","asassa"),
-        MBook("","asassa","asassa"),
-        MBook("","asassa","asassa"),
-        MBook("","asassa","asassa"),
-        MBook("","asassa","asassa"),
-        MBook("","asassa","asassa"),
 
-    )
-    val currentUser = if (!FirebaseAuth.getInstance().currentUser?.email.isNullOrEmpty()){
+    var listOfBooks = emptyList<MBook>()
+    val currentUser = FirebaseAuth.getInstance().currentUser
+
+    if (!viewModel.data.value.data.isNullOrEmpty()){
+        listOfBooks = viewModel.data.value.data!!.filter {mBook ->
+            mBook.userId == currentUser?.uid
+        }
+    }
+    val email = if (!FirebaseAuth.getInstance().currentUser?.email.isNullOrEmpty()){
         FirebaseAuth.getInstance().currentUser?.email?.split("@")?.get(0)
     }else{
         "N/A"
@@ -78,7 +71,7 @@ fun HomeScreen(navController: NavController){
                     }
                     .size(45.dp),
                 tint = MaterialTheme.colors.secondaryVariant)
-                Text(text = currentUser!!,
+                Text(text = email!!,
                 modifier = Modifier.padding(2.dp),
                 style = MaterialTheme.typography.overline,
                 color = Color.Red,
@@ -89,8 +82,8 @@ fun HomeScreen(navController: NavController){
             }
         }
         Divider()
-        ListCard()
-        ReadingRightNowArea(books = listOf(),navController = navController)
+//        ListCard()
+        ReadingRightNowArea(listOfBooks,navController = navController)
         
         TitleSection(label = "Reading List", modifier = Modifier)
         BookListArea(list = listOfBooks,navController = navController)
@@ -122,6 +115,9 @@ fun HorizontalScrollableComponent(list: List<MBook>, onCardPressed: (String) -> 
 
 @Composable
 fun ReadingRightNowArea(books: List<MBook>, navController: NavController) {
+    HorizontalScrollableComponent(books){
+
+    }
     
 }
 

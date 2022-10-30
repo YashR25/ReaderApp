@@ -183,7 +183,7 @@ fun ListCard(book: MBook = MBook("","","", ""), onPressDetail: (String) -> Unit 
             verticalArrangement = Arrangement.Bottom
         ) {
             Row(horizontalArrangement = Arrangement.Center) {
-                AsyncImage(model = "http://books.google.com/books/content?id=ex-tDwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api", contentDescription = "Book Image",
+                AsyncImage(model = book.photoUrl, contentDescription = "Book Image",
                     modifier = Modifier
                         .width(100.dp)
                         .height(140.dp)
@@ -198,12 +198,12 @@ fun ListCard(book: MBook = MBook("","","", ""), onPressDetail: (String) -> Unit 
                     BookRating(4.5)
                 }
             }
-            Text(text = "Book Name",
+            Text(text = book.title.toString(),
                 modifier = Modifier.padding(4.dp),
                 fontWeight = FontWeight.Bold,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis)
-            Text(text = "Author: All....", modifier = Modifier.padding(4.dp),
+            Text(text = "Author: ${book.author}", modifier = Modifier.padding(4.dp),
                 style = MaterialTheme.typography.caption)
             Row(horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.Bottom, modifier = Modifier.fillMaxWidth()) {
                 RoundedButton()
