@@ -6,7 +6,8 @@ enum class ReaderScreens {
     LoginScreen,
     ReaderStatsScreen,
     SearchScreen,
-    DetailScreen;
+    DetailScreen,
+    UpdateScreen;
     companion object{
         fun getScreens(route: String?): ReaderScreens{
             return when(route){
@@ -16,6 +17,7 @@ enum class ReaderScreens {
                 ReaderStatsScreen.name -> ReaderStatsScreen
                 SearchScreen.name -> SearchScreen
                 DetailScreen.name -> DetailScreen
+                UpdateScreen.name -> UpdateScreen
                 else -> HomeScreen
             }
         }

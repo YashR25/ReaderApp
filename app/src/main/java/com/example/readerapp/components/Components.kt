@@ -11,6 +11,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -175,7 +177,7 @@ fun ListCard(book: MBook = MBook("","","", ""), onPressDetail: (String) -> Unit 
             .width(202.dp)
             .height(242.dp)
             .clickable {
-                onPressDetail.invoke(book.title.toString())
+                onPressDetail.invoke(book.googleBookId.toString())
             }) {
         Column(
             modifier = Modifier.width(displayWidth.dp - (spacing * 2)),
@@ -195,7 +197,7 @@ fun ListCard(book: MBook = MBook("","","", ""), onPressDetail: (String) -> Unit 
                     modifier = Modifier.padding(top = 25.dp)
                 ) {
                     Icon(imageVector = Icons.Default.FavoriteBorder, contentDescription = "Favourite")
-                    BookRating(4.5)
+                    BookRating(book.rating!!)
                 }
             }
             Text(text = book.title.toString(),
@@ -205,8 +207,13 @@ fun ListCard(book: MBook = MBook("","","", ""), onPressDetail: (String) -> Unit 
                 overflow = TextOverflow.Ellipsis)
             Text(text = "Author: ${book.author}", modifier = Modifier.padding(4.dp),
                 style = MaterialTheme.typography.caption)
+            val isStartedReading = remember{
+                mutableStateOf(false)
+            }
             Row(horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.Bottom, modifier = Modifier.fillMaxWidth()) {
-                RoundedButton()
+                isStartedReading.value = book.startedReading != null
+                RoundedButton(label = if(isStartedReading.value) "Reading" else "Not Yet",
+                radius = 70)
             }
         }
 

@@ -9,6 +9,8 @@ data class MBook(
     var id: String? = null,
     var title: String? = null,
     var author: String? = null,
+    @get:PropertyName("book_notes")
+    @set:PropertyName("book_notes")
     var notes: String? = null,
     @get:PropertyName("book_photo_url")
     @set:PropertyName("book_photo_url")
